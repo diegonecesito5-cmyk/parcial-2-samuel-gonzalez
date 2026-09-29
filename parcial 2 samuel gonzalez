@@ -1,0 +1,249 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+
+
+
+G = nx.Graph()
+
+# Persona principal
+centro = "Samuel"
+
+
+
+familia = [
+    "Mamá",
+    "Papá",
+    "Hermana",
+    "Hermano",
+    "Abuela"
+]
+
+barrio = [
+    "Carlos",
+    "Laura",
+    "Andrés",
+    "Sofía",
+    "Juan"
+]
+
+universidad = [
+    "Camila",
+    "Daniel",
+    "Valentina",
+    "Mateo",
+    "Sebastián"
+]
+
+G.add_node(centro, comunidad="Samuel")
+
+for persona in familia:
+    G.add_node(persona, comunidad="Familia")
+
+for persona in barrio:
+    G.add_node(persona, comunidad="Barrio")
+
+for persona in universidad:
+    G.add_node(persona, comunidad="Universidad")
+
+
+for persona in familia:
+    G.add_edge("Samuel", persona)
+
+for persona in barrio:
+    G.add_edge("Samuel", persona)
+
+for persona in universidad:
+    G.add_edge("Samuel", persona)
+
+
+
+G.add_edges_from([
+    ("Mamá", "Papá"),
+    ("Mamá", "Hermana"),
+    ("Papá", "Hermano"),
+    ("Abuela", "Mamá"),
+    ("Hermana", "Hermano")
+])
+
+G.add_edges_from([
+    ("Carlos", "Laura"),
+    ("Carlos", "Andrés"),
+    ("Laura", "Sofía"),
+    ("Andrés", "Juan"),
+    ("Sofía", "Juan")
+])
+
+
+
+G.add_edges_from([
+    ("Camila", "Daniel"),
+    ("Camila", "Valentina"),
+    ("Daniel", "Mateo"),
+    ("Valentina", "Sebastián"),
+    ("Mateo", "Sebastián")
+])
+
+
+
+G.add_edges_from([
+    ("Hermana", "Laura"),
+    ("Carlos", "Daniel"),
+    ("Sofía", "Camila")
+])
+
+
+
+colores = {
+    "Samuel": "#FFD700",
+    "Familia": "#FF6B6B",
+    "Barrio": "#4ECDC4",
+    "Universidad": "#5B8FF9"
+}
+
+colores_nodos = [
+    colores[G.nodes[n]["comunidad"]]
+    for n in G.nodes()
+]
+
+
+
+pos = {
+
+    # Samuel en el centro
+    "Samuel": (0, 0),
+
+    # Familia
+    "Mamá": (-1.5, 3),
+    "Papá": (0, 3.5),
+    "Hermana": (1.5, 3),
+    "Hermano": (2, 1.8),
+    "Abuela": (-2, 1.8),
+
+    # Amigos del barrio
+    "Carlos": (-4, 0.5),
+    "Laura": (-4, -0.8),
+    "Andrés": (-3.2, -2),
+    "Sofía": (-2, -2.7),
+    "Juan": (-1, -1.8),
+
+    # Universidad
+    "Camila": (4, 0.5),
+    "Daniel": (4, -0.8),
+    "Valentina": (3.2, -2),
+    "Mateo": (2, -2.7),
+    "Sebastián": (1, -1.8)
+}
+
+plt.figure(figsize=(14, 10))
+
+# Dibujar las conexiones
+nx.draw_networkx_edges(
+    G,
+    pos,
+    edge_color="gray",
+    width=1.5,
+    alpha=0.7
+)
+
+# Dibujar los nodos
+nx.draw_networkx_nodes(
+    G,
+    pos,
+    node_color=colores_nodos,
+    node_size=1800,
+    edgecolors="black",
+    linewidths=1.5
+)
+
+# Escribir los nombres
+nx.draw_networkx_labels(
+    G,
+    pos,
+    font_size=9,
+    font_weight="bold"
+)
+
+
+nx.draw_networkx_nodes(
+    G,
+    pos,
+    nodelist=["Samuel"],
+    node_color="#FFD700",
+    node_size=3500,
+    edgecolors="black",
+    linewidths=3
+)
+
+
+
+plt.title(
+    "Red Social Personal de Samuel",
+    fontsize=22,
+    fontweight="bold"
+)
+
+
+
+leyenda = [
+    Line2D(
+        [0], [0],
+        marker="o",
+        color="w",
+        label="Samuel",
+        markerfacecolor="#FFD700",
+        markeredgecolor="black",
+        markersize=15
+    ),
+
+    Line2D(
+        [0], [0],
+        marker="o",
+        color="w",
+        label="Familia",
+        markerfacecolor="#FF6B6B",
+        markeredgecolor="black",
+        markersize=15
+    ),
+
+    Line2D(
+        [0], [0],
+        marker="o",
+        color="w",
+        label="Amigos del barrio",
+        markerfacecolor="#4ECDC4",
+        markeredgecolor="black",
+        markersize=15
+    ),
+
+    Line2D(
+        [0], [0],
+        marker="o",
+        color="w",
+        label="Compañeros de universidad",
+        markerfacecolor="#5B8FF9",
+        markeredgecolor="black",
+        markersize=15
+    )
+]
+
+plt.legend(
+    handles=leyenda,
+    loc="upper right",
+    fontsize=10
+)
+
+
+
+plt.axis("off")
+plt.tight_layout()
+
+# Guardar la imagen
+plt.savefig(
+    "red_social_Samuel.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+# Mostrar
+plt.show()
